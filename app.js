@@ -163,43 +163,43 @@ prompt(questions).then(answers => {
                   - secretRef:
                       name: user-service-secrets`,
                   "ingress.yaml": `apiVersion: networking.k8s.io/v1
-          kind: Ingress
-          metadata:
-            name: user-service-ingress
-          spec:
-            rules:
-            - host: user-service.local
-              http:
-                paths:
-                - path: /
-                  pathType: Prefix
-                  backend:
-                    service:
-                      name: user-service
-                      port:
-                        number: 3000`,
-                },
-                "CI-CD": {
-                  "jenkinsfile": `pipeline {
-            agent any
-            stages {
-              stage('Build') {
-                steps {
-                  sh 'npm run build'
+            kind: Ingress
+            metadata:
+              name: user-service-ingress
+            spec:
+              rules:
+              - host: user-service.local
+                http:
+                  paths:
+                  - path: /
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: user-service
+                        port:
+                          number: 3000`,
+                  },
+                  "CI-CD": {
+                    "jenkinsfile": `pipeline {
+              agent any
+              stages {
+                stage('Build') {
+                  steps {
+                    sh 'npm run build'
+                  }
+                }
+                stage('Test') {
+                  steps {
+                    sh 'npm test'
+                  }
+                }
+                stage('Deploy') {
+                  steps {
+                    sh 'kubectl apply -f deployment/kubernetes/user-service-deployment.yaml'
+                  }
                 }
               }
-              stage('Test') {
-                steps {
-                  sh 'npm test'
-                }
-              }
-              stage('Deploy') {
-                steps {
-                  sh 'kubectl apply -f deployment/kubernetes/user-service-deployment.yaml'
-                }
-              }
-            }
-          }`,
+            }`,
           },
         },
         ".gitignore": "node_modules/\nlogs/\n.env\ndist/",
